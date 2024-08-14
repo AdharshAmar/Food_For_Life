@@ -2,18 +2,41 @@ from flask import *
 from src.dbconnectionnew import *
 
 app =Flask(__name__)
-
 @app.route("/")
 def login():
     return render_template("login.html")
 
-@app.route("/user_Registrartion")
-def user_registration():
+@app.route("/login_code", methods=['POST'])
+def login_code():
+    username = request.form['textfield']
+    password = request.form['textfield2']
+
+    qry = "SELECT * FROM login WHERE username=%s AND password=%s"
+    val = (username, password)
+    res = selectone(qry, val)
+
+    if res is None:
+        return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
+    elif res['type'] == "Admin":
+        return '''<script>alert("Welcome Admin");window.location="/admin_home"</script>'''
+    elif res['type'] == "User":
+        return '''<script>alert("Welcome User");window.location="/user_home"</script>'''
+    elif res['type'] == "Volunteer":
+        return '''<script>alert("Welcome Volunteer");window.location="/volunteer_home"</script>'''
+    else:
+        return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
+
+@app.route("/user_Registration")
+def user_Registration():
     return render_template("User/user reg.html")
 
-@app.route("/user_Home")
+@app.route("/user_home")
 def user_Home():
     return render_template("User/user home.html")
+
+@app.route("/admin_home")
+def admin_home():
+    return render_template("Admin/admin home.html")
 
 @app.route("/user_sendRequest")
 def Send_Request():
