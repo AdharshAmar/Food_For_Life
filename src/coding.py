@@ -30,6 +30,9 @@ def login_code():
 def user_Registration():
     return render_template("User/user reg.html")
 
+
+
+
 @app.route("/user_home")
 def user_Home():
     return render_template("User/user home.html")
@@ -37,6 +40,32 @@ def user_Home():
 @app.route("/admin_home")
 def admin_home():
     return render_template("Admin/admin home.html")
+
+@app.route("/Verify_volunteers")
+def Verify_volunteers():
+    return render_template("Admin/Verify volunteers.html")
+
+@app.route("/Block_Unblock")
+def Block_Unblock():
+    return render_template("Admin/block unblock.html")
+
+
+@app.route("/View_donation")
+def View_donation():
+    return render_template("Admin/View donation.html")
+
+@app.route("/Complaint_reply")
+def Complaint_reply():
+    return render_template("Admin/complaint And reply.html")
+
+@app.route("/Complaint_reply/Reply")
+def Reply():
+    return render_template("Admin/reply.html")
+
+@app.route("/Rating_review")
+def Rating_review():
+    return render_template("Admin/rating and review.html")
+
 
 @app.route("/user_sendRequest")
 def Send_Request():
