@@ -26,16 +26,7 @@ def login_code():
     else:
         return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
 
-@app.route("/user_Registration")
-def user_Registration():
-    return render_template("User/user reg.html")
 
-
-
-
-@app.route("/user_home")
-def user_Home():
-    return render_template("User/user home.html")
 
 @app.route("/admin_home")
 def admin_home():
@@ -65,6 +56,16 @@ def Reply():
 @app.route("/Rating_review")
 def Rating_review():
     return render_template("Admin/rating and review.html")
+
+
+@app.route("/user_Registration")
+def user_Registration():
+    return render_template("User/user reg.html")
+
+
+@app.route("/user_home")
+def user_Home():
+    return render_template("User/user home.html")
 
 
 @app.route("/user_sendRequest")
@@ -111,11 +112,18 @@ def Send_RatingReview():
 def Send_RatingAddview():
     return render_template("User/send rating and review 3.html")
 
-
 @app.route("/Volunteer_Registration")
 def Volunteer_Registration():
     return render_template("Volunteer/Volunteer reg.html")
 
+@app.route("/Volunteer_Home")
+def Volunteer_Home():
+    return render_template("Volunteer/volunteer home.html")
+
+
+@app.route("/View_Request")
+def View_Request():
+    return render_template("Volunteer/View Request.html")
 
 
 app.run(debug = True)
