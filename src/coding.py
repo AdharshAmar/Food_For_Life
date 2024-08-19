@@ -64,19 +64,28 @@ def user_Registration():
 
 @app.route("/user_register_code",methods=['post'])
 def user_register_code():
-    fname=request.form["testfield"]
-    lname = request.form["testfield2"]
-    phone = request.form["testfield3"]
-    email = request.form["testfield4"]
-    place = request.form["testfield5"]
-    post = request.form["testfield6"]
-    pin = request.form["testfield7"]
-    username = request.form["testfield8"]
-    password = request.form["testfield9"]
+    fname=request.form["textfield"]
+    lname = request.form["textfield2"]
+    phone = request.form["textfield3"]
+    email = request.form["textfield4"]
+    place = request.form["textfield5"]
+    post = request.form["textfield6"]
+    pin = request.form["textfield7"]
+    username = request.form["textfield8"]
+    password = request.form["textfield9"]
 
     qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'user')"
-    val=
-    id=
+    val= (username,password)
+    id= iud(qry, val)
+
+    qry="INSERT INTO `user` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
+    val= (id, fname, lname, phone, place, post, pin, email)
+
+    iud(qry, val)
+
+    return '''<script>alert("Registration succes    sfull");window.location="/"</script>'''
+
+
 
 @app.route("/user_home")
 def user_Home():
