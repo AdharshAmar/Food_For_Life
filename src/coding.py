@@ -62,6 +62,21 @@ def Rating_review():
 def user_Registration():
     return render_template("User/user reg.html")
 
+@app.route("/user_register_code",methods=['post'])
+def user_register_code():
+    fname=request.form["testfield"]
+    lname = request.form["testfield2"]
+    phone = request.form["testfield3"]
+    email = request.form["testfield4"]
+    place = request.form["testfield5"]
+    post = request.form["testfield6"]
+    pin = request.form["testfield7"]
+    username = request.form["testfield8"]
+    password = request.form["testfield9"]
+
+    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'user')"
+    val=
+    id=
 
 @app.route("/user_home")
 def user_Home():
@@ -121,9 +136,8 @@ def Volunteer_Home():
     return render_template("Volunteer/volunteer home.html")
 
 
-@app.route("/View_Request")
-def View_Request():
-    return render_template("Volunteer/View Request.html")
+
+
 
 
 app.run(debug = True)
