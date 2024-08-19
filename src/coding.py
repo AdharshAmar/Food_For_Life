@@ -74,7 +74,7 @@ def user_register_code():
     username = request.form["textfield8"]
     password = request.form["textfield9"]
 
-    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'user')"
+    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'User')"
     val= (username,password)
     id= iud(qry, val)
 
@@ -109,7 +109,7 @@ def Send_Requestsend ():
 def View_Request():
     return render_template("User/view request status.html")
 
-@app.route("/user_sendRequestsend")
+@app.route("/user_viewRequestview")
 def ViewRequestView():
     return render_template("User/view request status2.html")
 
