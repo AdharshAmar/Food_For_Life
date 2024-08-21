@@ -49,7 +49,7 @@ def View_donation():
 def Complaint_reply():
     return render_template("Admin/complaint And reply.html")
 
-@app.route("/Complaint_reply/Reply")
+@app.route("/Reply")
 def Reply():
     return render_template("Admin/reply.html")
 
@@ -83,7 +83,7 @@ def user_register_code():
 
     iud(qry, val)
 
-    return '''<script>alert("Registration succes    sfull");window.location="/"</script>'''
+    return '''<script>alert("Registration successfull");window.location="/"</script>'''
 
 
 
@@ -144,9 +144,26 @@ def Volunteer_Registration():
 def Volunteer_Home():
     return render_template("Volunteer/volunteer home.html")
 
+@app.route("/View_request_volunteer")
+def View_request_volunteer():
+    return render_template("Volunteer/View Request.html")
+
+@app.route("/Manage_request_volunteer")
+def Manage_request_volunteer():
+    return render_template("Volunteer/manage request status.html")
+
+@app.route("/Manage_requestdetails_volunteer")
+def Manage_requestdetails_volunteer():
+    return render_template("Volunteer/manage rqst status 2.html")
 
 
+@app.route("/Sendcomplaint_viewreply_volunteer")
+def Sendcomplaint_viewreply_volunteer():
+    return render_template("Volunteer/Send compliant & view reply.html")
 
 
+@app.route("/Viewrating_review_volunteer")
+def Viewrating_review_volunteer():
+    return render_template("Volunteer/View rating and review.html")
 
 app.run(debug = True)
