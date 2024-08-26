@@ -45,6 +45,21 @@ def Block_Unblock():
     return render_template("Admin/block unblock.html")
 
 
+@app.route("/view_block_unblock_details", methods=['post'])
+def view_block_unblock_details():
+
+    type = request.form['select']
+
+    if type == "User":
+        qry = 'SELECT * FROM `user` JOIN `login` ON `user`.lid = `login`.id WHERE `login`.type != "pending"'
+        res = selectall(qry)
+    else:
+        qry = 'SELECT * FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `login`.type !="pending"'
+        res = selectall(qry)
+    print(res)
+    return render_template("Admin/block unblock.html", val=res, type = type)
+
+
 @app.route("/View_donation")
 def View_donation():
     return render_template("Admin/View donation.html")
