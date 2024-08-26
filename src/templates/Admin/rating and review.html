@@ -14,7 +14,7 @@
         <select name="select">
 
           {% for i in val %}
-          <option value="{{i['lid']}}">{{i['fname']}} {{i['lname']}}</option>
+          <option value="{{i['lid']}}"  {% if i['lid'] == vid %} selected {% endif %} >{{i['fname']}} {{i['lname']}}</option>
           {% endfor %}
 
         </select>

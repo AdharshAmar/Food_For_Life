@@ -2,6 +2,8 @@ from flask import *
 from src.dbconnectionnew import *
 
 app =Flask(__name__)
+app.secret_key ="657349885734895"
+
 @app.route("/")
 def login():
     return render_template("login.html")
@@ -22,7 +24,7 @@ def login_code():
     elif res['type'] == "User":
         return '''<script>alert("Welcome User");window.location="/user_home"</script>'''
     elif res['type'] == "Volunteer":
-        return '''<script>alert("Welcome Volunteer");window.location="/volunteer_home"</script>'''
+        return '''<script>alert("Welcome Volunteer");window.location="/Volunteer_Home"</script>'''
     else:
         return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
 
@@ -127,6 +129,15 @@ def view_donation_details():
 
 @app.route("/Complaint_reply")
 def Complaint_reply():
+
+    return render_template("Admin/complaint And reply.html")
+
+
+@app.route("/insert_reply", methods=['post'])
+def insert_reply():
+    reply = request.form['textfield']
+    qry = "UPDATE `complaint` SET reply = %s WHERE id = %s"
+    iud(qry,(reply, session['cid']))
     return render_template("Admin/complaint And reply.html")
 
 
@@ -157,6 +168,8 @@ def display_complaint():
 
 @app.route("/Reply")
 def Reply():
+    id = request.args.get('id')
+    session['cid'] = id
     return render_template("Admin/reply.html")
 
 @app.route("/Rating_review")
@@ -175,7 +188,7 @@ def view_rating_review():
 
     qry = 'SELECT `user`.`fname`,`user`.`lname`,`ratingreview`.* FROM `ratingreview` JOIN `user` ON `ratingreview`.`userid`=`user`.`lid` WHERE `ratingreview`.`volunteerid`=%s'
     res2 = selectall2(qry, vid)
-    return render_template("Admin/rating and review.html", val = res, val2 = res2)
+    return render_template("Admin/rating and review.html", val = res, val2 = res2, vid=vid)
 
 
 @app.route("/user_Registration")
