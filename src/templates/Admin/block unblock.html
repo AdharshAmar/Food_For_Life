@@ -39,10 +39,10 @@
       <td>{{i['email']}}</td>
       <td>{{i['phone']}}</td>
       <td><p>
-        {% if i["type"] == "block" %}
-         <p><a href="#">Unblock</a></p>
+        {% if i["type"] == "blocked" %}
+         <p><a href="unblock_user?id={{i['lid']}}">Unblock</a></p>
         {% else %}
-        <a href="#">Block</a></p>
+        <a href="block_user?id={{i['lid']}}">Block</a></p>
 
         {% endif %}
      </td>
@@ -70,10 +70,10 @@
       <td>{{i['phone']}}</td>
       <td>{{i['location']}}</td>
       <td><p>
-        {% if i["type"] == "block" %}
-         <p><a href="#">Unblock</a></p>
+        {% if i["type"] == "blocked" %}
+         <p><a href="unblock_volunteer?id={{i['lid']}}">Unblock</a></p>
         {% else %}
-        <a href="#">Block</a></p>
+        <a href="block_volunteer?id={{i['lid']}}">Block</a></p>
 
         {% endif %}
      </td>

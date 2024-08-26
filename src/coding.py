@@ -40,6 +40,23 @@ def Verify_volunteers():
 
     return render_template("Admin/Verify volunteers.html", val = res)
 
+
+@app.route("/accept_volunteer")
+def accept_volunteer():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="Volunteer" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Successfully Accepted");window.location="/Verify_volunteers"</script>'''
+
+
+@app.route("/reject_volunteer")
+def reject_volunteer():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="rejected" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Rejected");window.location="/Verify_volunteers"</script>'''
+
+
 @app.route("/Block_Unblock")
 def Block_Unblock():
     return render_template("Admin/block unblock.html")
@@ -51,13 +68,44 @@ def view_block_unblock_details():
     type = request.form['select']
 
     if type == "User":
-        qry = 'SELECT * FROM `user` JOIN `login` ON `user`.lid = `login`.id WHERE `login`.type != "pending"'
+        qry = 'SELECT * FROM `user` JOIN `login` ON `user`.lid = `login`.id WHERE `login`.type = "User" or `login`.type="blocked"'
         res = selectall(qry)
     else:
-        qry = 'SELECT * FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `login`.type !="pending"'
+        qry = 'SELECT * FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `login`.type ="Volunteer" or `login`.type="blocked"'
         res = selectall(qry)
-    print(res)
     return render_template("Admin/block unblock.html", val=res, type = type)
+
+
+@app.route("/block_user")
+def block_user():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="blocked" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
+
+
+@app.route("/unblock_user")
+def unblock_user():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="User" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
+
+
+@app.route("/block_volunteer")
+def block_volunteer():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="blocked" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
+
+
+@app.route("/unblock_volunteer")
+def unblock_volunteer():
+    id = request.args.get('id')
+    qry = 'UPDATE `login` SET `type`="Volunteer" WHERE `id`=%s'
+    iud(qry, id)
+    return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
 
 
 @app.route("/View_donation")
@@ -81,13 +129,53 @@ def view_donation_details():
 def Complaint_reply():
     return render_template("Admin/complaint And reply.html")
 
+
+@app.route("/display_complaint", methods=['post'])
+def display_complaint():
+    complaint_type = request.form['select']
+    user_type = request.form['select2']
+
+    if complaint_type == "Pending":
+        if user_type == "User":
+            qry = 'SELECT * FROM `complaint` JOIN `user` ON `complaint`.`lid`=`user`.lid WHERE `complaint`.`reply`="pending"'
+            res = selectall(qry)
+            return render_template("Admin/complaint And reply.html", val=res, utype = user_type, ctype = complaint_type)
+        else:
+            qry = 'SELECT * FROM `complaint` JOIN `volunteer` ON `complaint`.`lid`=`volunteer`.lid WHERE `complaint`.`reply`="pending"'
+            res = selectall(qry)
+            return render_template("Admin/complaint And reply.html", val=res, utype = user_type, ctype = complaint_type)
+    else:
+        if user_type == "User":
+            qry = 'SELECT * FROM `complaint` JOIN `user` ON `complaint`.`lid`=`user`.lid WHERE `complaint`.`reply`!="pending"'
+            res = selectall(qry)
+            return render_template("Admin/complaint And reply.html", val=res, utype = user_type, ctype = complaint_type)
+        else:
+            qry = 'SELECT * FROM `complaint` JOIN `volunteer` ON `complaint`.`lid`=`volunteer`.lid WHERE `complaint`.`reply`!="pending"'
+            res = selectall(qry)
+            return render_template("Admin/complaint And reply.html", val=res, utype = user_type, ctype = complaint_type)
+
+
 @app.route("/Reply")
 def Reply():
     return render_template("Admin/reply.html")
 
 @app.route("/Rating_review")
 def Rating_review():
-    return render_template("Admin/rating and review.html")
+    qry = 'SELECT `volunteer`.`fname`,`volunteer`.`lname`,`volunteer`.`lid` FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `login`.`type`="Volunteer"'
+    res = selectall(qry)
+    return render_template("Admin/rating and review.html", val = res)
+
+
+@app.route("/view_rating_review", methods=['post'])
+def view_rating_review():
+    vid = request.form['select']
+
+    qry = 'SELECT `volunteer`.`fname`,`volunteer`.`lname`,`volunteer`.`lid` FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `login`.`type`="Volunteer"'
+    res = selectall(qry)
+
+    qry = 'SELECT `user`.`fname`,`user`.`lname`,`ratingreview`.* FROM `ratingreview` JOIN `user` ON `ratingreview`.`userid`=`user`.`lid` WHERE `ratingreview`.`volunteerid`=%s'
+    res2 = selectall2(qry, vid)
+    return render_template("Admin/rating and review.html", val = res, val2 = res2)
 
 
 @app.route("/user_Registration")

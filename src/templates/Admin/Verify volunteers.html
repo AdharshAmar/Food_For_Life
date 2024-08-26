@@ -26,8 +26,8 @@
       <td>{{i['email']}}</td>
       <td>{{i['phone']}}</td>
       <td>{{i['location']}}</td>
-      <td><p><a href="#">Accept</a></p>
-      <p><a href="#">Reject</a></p></td>
+      <td><p><a href="accept_volunteer?id={{i['lid']}}">Accept</a></p>
+      <p><a href="reject_volunteer?id={{i['lid']}}">Reject</a></p></td>
     </tr>
 
     {% endfor %}
