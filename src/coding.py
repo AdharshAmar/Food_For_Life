@@ -64,6 +64,19 @@ def view_block_unblock_details():
 def View_donation():
     return render_template("Admin/View donation.html")
 
+
+@app.route("/view_donation_details", methods=['post'])
+def view_donation_details():
+    location=request.form['textfield']
+    date=request.form['textfield2']
+
+    qry = "SELECT `user`.`fname` as ufname,`user`.`lname` as ulname,`volunteer`.`fname` as vfname,`volunteer`.`lname` as vlname,`requestdetails`.`status`,`request`.`details` FROM `request` JOIN `requestdetails`ON `request`.id = `requestdetails`.`requestid` JOIN `volunteer` ON `requestdetails`.`volunteerid`=`volunteer`.`lid` JOIN `user`ON `request`.`userid`=`user`.lid WHERE `request`.`date`=%s AND `volunteer`.`location`=%s"
+    res = selectall2(qry, (date, location))
+
+    return render_template("Admin/View donation.html", val=res)
+
+
+
 @app.route("/Complaint_reply")
 def Complaint_reply():
     return render_template("Admin/complaint And reply.html")
