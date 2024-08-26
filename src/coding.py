@@ -34,7 +34,11 @@ def admin_home():
 
 @app.route("/Verify_volunteers")
 def Verify_volunteers():
-    return render_template("Admin/Verify volunteers.html")
+
+    qry = 'SELECT `volunteer`.* FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE TYPE="pending"'
+    res = selectall(qry)
+
+    return render_template("Admin/Verify volunteers.html", val = res)
 
 @app.route("/Block_Unblock")
 def Block_Unblock():
@@ -139,6 +143,33 @@ def Send_RatingAddview():
 @app.route("/Volunteer_Registration")
 def Volunteer_Registration():
     return render_template("Volunteer/Volunteer reg.html")
+
+@app.route("/Volunteer_register_code",methods=['post'])
+def Volunteer_register_code():
+    fname=request.form["textfield"]
+    lname = request.form["textfield2"]
+    phone = request.form["textfield22"]
+    email = request.form["textfield23"]
+    place = request.form["textfield24"]
+    post = request.form["textfield25"]
+    pin = request.form["textfield26"]
+    location = request.form["textfield27"]
+    username = request.form["textfield28"]
+    password = request.form["textfield29"]
+
+    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'pending')"
+    val= (username,password)
+    id= iud(qry, val)
+
+    qry="INSERT INTO `volunteer` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+    val= (id, fname, lname, phone,email, place, post, pin,location)
+
+    iud(qry, val)
+
+    return '''<script>alert("Registration successfull");window.location="/"</script>'''
+
+
+
 
 @app.route("/Volunteer_Home")
 def Volunteer_Home():
