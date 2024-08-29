@@ -6,7 +6,7 @@ app.secret_key ="657349885734895"
 
 @app.route("/")
 def login():
-    return render_template("login.html")
+    return render_template("login_index.html")
 
 @app.route("/login_code", methods=['POST'])
 def login_code():
@@ -38,7 +38,7 @@ def admin_home():
 def Verify_volunteers():
 
     qry = 'SELECT `volunteer`.* FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE TYPE="pending"'
-    res = selectall(qry)
+    res  = selectall(qry)
 
     return render_template("Admin/Verify volunteers.html", val = res)
 
@@ -228,6 +228,8 @@ def user_Home():
 @app.route("/user_sendRequest")
 def Send_Request():
     return render_template("User/send request.html")
+
+
 
 @app.route("/user_sendRequestview")
 def Send_RequestView():
