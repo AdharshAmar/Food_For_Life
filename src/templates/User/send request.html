@@ -6,11 +6,10 @@
 </head>
 
 <body>
-<form id="form1" name="form1" method="post" action="">
+<form id="form1" name="form1" method="post" action="search_volunteer">
   <table width="200" border="1">
     <tr>
-      <td>&nbsp;</td>
-      <td colspan="5">Location 
+      <td colspan="6">Location
         <label>
         <input type="text" name="textfield" />
         <input name="Search" type="submit" id="Search" value="Search" />
@@ -24,16 +23,26 @@
       <td>Phone</td>
       <td>Rating And Review </td>
     </tr>
+
+    {% for i in val %}
+
     <tr>
       <td><label>
-        <input type="checkbox" name="checkbox" value="checkbox" />
+        <input type="checkbox" name="checkbox" value={{i['lid']}} />
       </label></td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td><a href="user_sendRequestview">View</a></td>
+      <td>{{i['fname']}} {{i['lname']}}</td>
+      <td>
+        {{i['place']}}<br>
+      {{i['post']}}<br>
+      {{i['pin']}}
+      </td>
+      <td>{{i['email']}}</td>
+      <td>{{i['phone']}}</td>
+      <td><a href="user_sendRequestview?id={{i['lid']}}">View</a></td>
     </tr>
+
+    {% endfor %}
+
     <tr>
       <td colspan="6"><label>
         <input name="Send" type="submit" id="Send" value="Send" />

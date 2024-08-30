@@ -230,10 +230,20 @@ def Send_Request():
     return render_template("User/send request.html")
 
 
+@app.route("/search_volunteer", methods=['post'])
+def search_volunteer():
+    location = request.form['textfield']
+    qry = "SELECT * FROM `volunteer` WHERE `location`=%s"
+    res = selectall2(qry, location)
+    return render_template("User/send request.html", val=res)
+
 
 @app.route("/user_sendRequestview")
 def Send_RequestView():
-    return render_template("User/send request view details.html")
+    id = request.args.get('id')
+    qry = "SELECT `user`.`fname`,`lname`,`ratingreview`.* FROM `ratingreview` JOIN `user` ON `ratingreview`.userid = user.lid WHERE `ratingreview`.`volunteerid`=%s"
+    res = selectall2(qry, id)
+    return render_template("User/send request view details.html", val=res)
 
 @app.route("/user_sendRequestsend")
 def Send_Requestsend ():
