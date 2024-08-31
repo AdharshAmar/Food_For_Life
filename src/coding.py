@@ -20,10 +20,13 @@ def login_code():
     if res is None:
         return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
     elif res['type'] == "Admin":
+        session['lid'] = res['id']
         return '''<script>alert("Welcome Admin");window.location="/admin_home"</script>'''
     elif res['type'] == "User":
+        session['lid'] = res['id']
         return '''<script>alert("Welcome User");window.location="/user_home"</script>'''
     elif res['type'] == "Volunteer":
+        session['lid'] = res['id']
         return '''<script>alert("Welcome Volunteer");window.location="/Volunteer_Home"</script>'''
     else:
         return '''<script>alert("Invalid Username or Password");window.location="/"</script>'''
@@ -252,34 +255,80 @@ def Send_Requestsend ():
 
 @app.route("/user_ViewRequest")
 def View_Request():
-    return render_template("User/view request status.html")
+    qry = "SELECT * FROM `request` WHERE `userid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("User/view request status.html", val=res)
 
 @app.route("/user_viewRequestview")
 def ViewRequestView():
-    return render_template("User/view request status2.html")
+    id = request.args.get('id')
+    qry = "SELECT `volunteer`.`fname`,`lname`,`requestdetails`.`status` FROM `requestdetails` JOIN `volunteer` ON `requestdetails`.`volunteerid`=`volunteer`.`lid` WHERE `requestdetails`.`requestid`=%s"
+    res = selectall2(qry, id)
+    return render_template("User/view request status2.html", val=res)
 
 
 @app.route("/user_SendComplaint")
 def Send_Complaint():
-    return render_template("User/send complaint and view reply.html")
+    qry = "SELECT * FROM `complaint` WHERE `lid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("User/send complaint and view reply.html", val=res)
 
-@app.route("/user_SendComplaintaddview")
+@app.route("/delete_complaint")
+def delete_complaint():
+    id = request.args.get('id')
+    qry = "DELETE FROM `complaint` WHERE `id`=%s"
+    iud(qry, id)
+    return '''<script>alert("Deleted");window.location="user_SendComplaint"</script>'''
+
+@app.route("/user_SendComplaintaddview", methods=['post'])
 def Send_Complaintaddview():
     return render_template("User/send complaint and view reply 2.html")
+
+
+@app.route("/insert_complaint", methods=['post'])
+def insert_complaint():
+    complaint = request.form['textfield']
+    qry = "INSERT INTO `complaint` VALUES(NULL, %s, %s, 'pending', CURDATE())"
+    iud(qry, (session['lid'], complaint))
+    return '''<script>alert("success");window.location="user_SendComplaint"</script>'''
 
 
 
 @app.route("/user_SendRating")
 def Send_Rating():
-    return render_template("User/send rating and review 1.html")
+    qry = "SELECT `volunteer`.`fname`,`lname`,lid,`request`.* FROM `request` JOIN `requestdetails` ON `request`.`id`=`requestdetails`.`requestid` JOIN `volunteer` ON `requestdetails`.`volunteerid`=`volunteer`.`lid` WHERE `request`.`userid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("User/send rating and review 1.html", val=res)
 
 @app.route("/user_SendRatingReview")
 def Send_RatingReview():
-    return render_template("User/send rating and review 2.html")
+    id = request.args.get('id')
+    session['vid'] = id
+    qry = "SELECT * FROM `ratingreview` WHERE `volunteerid`=%s"
+    res = selectall2(qry, id)
+    return render_template("User/send rating and review 2.html", val=res)
 
-@app.route("/user_SendRatingAddview")
+@app.route("/user_SendRatingAddview", methods=['post'])
 def Send_RatingAddview():
     return render_template("User/send rating and review 3.html")
+
+
+@app.route("/insert_rating", methods=['post'])
+def insert_rating():
+    rating = request.form['textfield']
+    review = request.form['textfield2']
+    qry = "INSERT INTO `ratingreview` VALUES(NULL, %s, %s, %s, %s, CURDATE())"
+    iud(qry, (session['lid'], session['vid'],rating,review))
+    return '''<script>alert("success");window.location="user_SendRating"</script>'''
+
+
+@app.route("/delete_rating")
+def delete_rating():
+    id = request.args.get('id')
+    qry = "DELETE FROM `ratingreview` WHERE `id`=%s"
+    iud(qry, id)
+    return '''<script>alert("Deleted");window.location="user_SendRating"</script>'''
+
 
 @app.route("/Volunteer_Registration")
 def Volunteer_Registration():

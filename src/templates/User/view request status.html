@@ -12,16 +12,20 @@
       <td>Request</td>
       <td>Details</td>
       <td>Date</td>
-      <td>status</td>
       <td>Volunteers</td>
     </tr>
+
+    {% for i in val %}
+
     <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td><a href="user_viewRequestview">View</a></td>
+      <td>{{i['request']}}</td>
+      <td>{{i['details']}}</td>
+      <td>{{i['date']}}</td>
+      <td><a href="user_viewRequestview?id={{i['id']}}">View</a></td>
     </tr>
+
+    {% endfor %}
+
   </table>
 </form>
 </body>

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<form id="form1" name="form1" method="post" action="">
+<form id="form1" name="form1" method="post" action="user_SendComplaintaddview">
   <table width="200" border="1">
     <tr>
       <td>complaint </td>
@@ -14,12 +14,18 @@
       <td>Reply</td>
       <td>&nbsp;</td>
     </tr>
+
+    {% for i in val %}
+
     <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td><a href="#">Delete</a></td>
+      <td>{{i['complaint']}}</td>
+      <td>{{i['date']}}</td>
+      <td>{{i['reply']}}</td>
+      <td><a href="delete_complaint?id={{i['id']}}">Delete</a></td>
     </tr>
+
+    {% endfor %}
+
     <tr>
       <td colspan="4"><label>
         <input name="Add view" type="submit" id="Add view" value="Add View" />
