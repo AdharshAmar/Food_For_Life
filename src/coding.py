@@ -35,7 +35,7 @@ def login_code():
 
 @app.route("/admin_home")
 def admin_home():
-    return render_template("Admin/admin home.html")
+    return render_template("Admin/admin_index.html")
 
 @app.route("/Verify_volunteers")
 def Verify_volunteers():
@@ -225,7 +225,7 @@ def user_register_code():
 
 @app.route("/user_home")
 def user_Home():
-    return render_template("User/user home.html")
+    return render_template("User/user_index.html")
 
 
 @app.route("/user_sendRequest")
@@ -363,7 +363,7 @@ def Volunteer_register_code():
 
 @app.route("/Volunteer_Home")
 def Volunteer_Home():
-    return render_template("Volunteer/volunteer home.html")
+    return render_template("Volunteer/volunteer_index.html")
 
 @app.route("/View_request_volunteer")
 def View_request_volunteer():
@@ -380,11 +380,36 @@ def Manage_requestdetails_volunteer():
 
 @app.route("/Sendcomplaint_viewreply_volunteer")
 def Sendcomplaint_viewreply_volunteer():
-    return render_template("Volunteer/Send compliant & view reply.html")
+    qry = "SELECT * FROM `complaint` WHERE `lid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("Volunteer/Send compliant & view reply.html", val=res)
+
+
+@app.route("/delete_complaint2")
+def delete_complaint2():
+    id = request.args.get('id')
+    qry = "DELETE FROM `complaint` WHERE `id`=%s"
+    iud(qry, id)
+    return '''<script>alert("Deleted");window.location="Sendcomplaint_viewreply_volunteer"</script>'''
+
+
+@app.route("/add_new_complaint", methods=['post'])
+def add_new_complaint():
+    return render_template("Volunteer/Add new complaint.html")
+
+
+@app.route("/insert_complaint2", methods=['post'])
+def insert_complaint2():
+    complaint = request.form['textfield']
+    qry = "INSERT INTO `complaint` VALUES(NULL, %s, %s, 'pending', CURDATE())"
+    iud(qry, (session['lid'], complaint))
+    return '''<script>alert("success");window.location="Sendcomplaint_viewreply_volunteer"</script>'''
 
 
 @app.route("/Viewrating_review_volunteer")
 def Viewrating_review_volunteer():
-    return render_template("Volunteer/View rating and review.html")
+    qry = "SELECT `ratingreview`.*,`user`.`fname`,`lname` FROM `ratingreview` JOIN `user` ON `ratingreview`.userid=`user`.`lid` WHERE `ratingreview`.`volunteerid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("Volunteer/View rating and review.html", val = res)
 
 app.run(debug = True)
