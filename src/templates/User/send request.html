@@ -11,8 +11,8 @@
     <tr>
       <td colspan="6">Location
         <label>
-        <input type="text" name="textfield" />
-        <input name="Search" type="submit" id="Search" value="Search" />
+        <input type="text" name="textfield" value="{{loc}}"/>
+        <input name="send_button" type="submit" id="Search" value="Search" />
       </label></td>
     </tr>
     <tr>
@@ -43,9 +43,10 @@
 
     {% endfor %}
 
-    <tr>
+    <tr align="center">
       <td colspan="6"><label>
-        <input name="Send" type="submit" id="Send" value="Send" />
+
+        <input name="send_button" type="submit" id="Send" value="Send" class="btn btn-primary"/>
       </label></td>
     </tr>
   </table>

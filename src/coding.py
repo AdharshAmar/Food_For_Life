@@ -235,10 +235,41 @@ def Send_Request():
 
 @app.route("/search_volunteer", methods=['post'])
 def search_volunteer():
-    location = request.form['textfield']
-    qry = "SELECT * FROM `volunteer` WHERE `location`=%s"
-    res = selectall2(qry, location)
-    return render_template("User/send request.html", val=res)
+    button = request.form['send_button']
+
+    if button == "Search":
+        location = request.form['textfield']
+        qry = "SELECT * FROM `volunteer` JOIN `login` ON `volunteer`.lid = `login`.id WHERE `location`=%s AND `login`.type= 'Volunteer'"
+        res = selectall2(qry, location)
+        return render_template("User/send request.html", val=res, loc = location)
+    else:
+        vid = request.form.getlist('checkbox')
+
+        if len(vid) == 0:
+            return '''<script>alert("Please select atleast one volunteer");window.location="user_sendRequest"</script>'''
+        else:
+            session['vlist'] = vid
+            print(session['vlist'])
+            return render_template("User/send request send details.html")
+
+
+@app.route("/insert_request", methods=['post'])
+def insert_request():
+    food_req = request.form['textfield']
+    details = request.form['textfield2']
+    lati = request.form['textfield3']
+    longi = request.form['textfield4']
+
+    qry = "INSERT INTO `request` VALUES(NULL, %s , %s, %s, CURDATE(), %s, %s)"
+    id = iud(qry, (session['lid'], food_req, details, lati, longi))
+
+    volunteer_list = session['vlist']
+
+    for i in volunteer_list:
+        qry = "INSERT INTO `requestdetails` VALUES(NULL, %s, %s, 'pending')"
+        iud(qry, (id, int(i)))
+
+    return '''<script>alert("Success");window.location="user_sendRequest"</script>'''
 
 
 @app.route("/user_sendRequestview")
@@ -248,9 +279,6 @@ def Send_RequestView():
     res = selectall2(qry, id)
     return render_template("User/send request view details.html", val=res)
 
-@app.route("/user_sendRequestsend")
-def Send_Requestsend ():
-    return render_template("User/send request send details.html")
 
 
 @app.route("/user_ViewRequest")
@@ -367,7 +395,9 @@ def Volunteer_Home():
 
 @app.route("/View_request_volunteer")
 def View_request_volunteer():
-    return render_template("Volunteer/View Request.html")
+    qry = "SELECT `user`.fname,lname,`request`.* FROM `request` JOIN `user` ON `request`.userid = `user`.lid JOIN `requestdetails` ON `request`.id=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s"
+    res = selectall2(qry, session['lid'])
+    return render_template("Volunteer/View Request.html", val=res)
 
 @app.route("/Manage_request_volunteer")
 def Manage_request_volunteer():
