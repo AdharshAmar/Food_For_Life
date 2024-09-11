@@ -1,8 +1,22 @@
 from flask import *
 from src.dbconnectionnew import *
+from flask_mail import *
+import random
 
 app =Flask(__name__)
 app.secret_key ="657349885734895"
+
+
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'  # Use the server for your mail service
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_USERNAME'] = 'foodforlifedonation@gmail.com'  # Your email address
+app.config['MAIL_PASSWORD'] = 'jnjd eqxp ajlp dyoc'  # Your email password
+app.config['MAIL_DEFAULT_SENDER'] = ('Food For Life-Donation And Distribution Management System', 'foodforlifedonation@gmail.com')
+
+mail = Mail(app)
+
 
 @app.route("/")
 def login():
@@ -94,7 +108,7 @@ def unblock_user():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="User" WHERE `id`=%s'
     iud(qry, id)
-    return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
+    return '''<script>alert("UnBlocked");window.location="/Block_Unblock"</script>'''
 
 
 @app.route("/block_volunteer")
@@ -210,17 +224,58 @@ def user_register_code():
     username = request.form["textfield8"]
     password = request.form["textfield9"]
 
-    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'User')"
+    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'Pending')"
     val= (username,password)
     id= iud(qry, val)
+
+    session['puserid'] = id
 
     qry="INSERT INTO `user` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
     val= (id, fname, lname, phone, place, post, pin, email)
 
     iud(qry, val)
 
-    return '''<script>alert("Registration successfull");window.location="/"</script>'''
+    random_number = random.randint(1000, 9999)
 
+    print(random_number)
+
+    s = random_number
+    session['otp'] = random_number
+
+    def mail(s, email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("Your OTP to verify Email: " + str(s)+ " Dont share your OTP")
+        print(msg)
+        msg['Subject'] = 'Verify your email'
+        msg['To'] = email
+        msg['From'] = 'regionalmails@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(s,email)
+
+    return render_template("User/otp.html")
+
+
+@app.route("/Verify_otp", methods=['post'])
+def Verify_otp():
+    otp = request.form['textfield']
+    print(otp,session['otp'])
+    if int(otp) == int(session['otp']):
+        qry = "update login set type='User' where id = %s"
+        iud(qry, session['puserid'])
+        return '''<script>alert("Registration Success");window.location="/"</script>'''
+    else:
+        return '''<script>alert("Invalid otp");window.location="/"</script>'''
 
 
 @app.route("/user_home")
