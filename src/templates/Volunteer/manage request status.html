@@ -16,14 +16,20 @@
       <td>Current status </td>
       <td>&nbsp; </td>
     </tr>
+
+    {% for i in val %}
+
     <tr>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td>&nbsp;</td>
-      <td><a href="#">View in map</a></td>
-      <td>&nbsp;</td>
-      <td><a href="Manage_requestdetails_volunteer">Update details</a></td>
+      <td>{{i['fname']}} {{i['lname']}}</td>
+      <td>{{i['request']}}</td>
+      <td>{{i['details']}}</td>
+      <td><a href="https://www.google.com/maps?q={{i['latitude']}},{{i['longitude']}}">View in map</a></td>
+      <td>{{i['status']}}</td>
+      <td><a href="Manage_requestdetails_volunteer?id={{i['id']}}">Update details</a></td>
     </tr>
+
+    {% endfor %}
+
   </table>
 </form>
 </body>

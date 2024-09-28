@@ -13,6 +13,7 @@
       <td>Request</td>
       <td>Details</td>
       <td>Location</td>
+      <td></td>
     </tr>
 
     {% for i in val %}
@@ -22,6 +23,10 @@
       <td>{{i['request']}}</td>
       <td>{{i['details']}}</td>
       <td><a href="https://www.google.co.in/maps?q={{i['latitude']}},{{i['longitude']}}">View in map</a></td>
+      <td>
+        <a href="accept_request?id={{i['id']}}" class="btn btn-success">Accept</a><br><br>
+        <a href="reject_request?id={{i['id']}}" class="btn btn-danger"> Reject </a>
+      </td>
     </tr>
 
     {% endfor %}

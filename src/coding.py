@@ -450,17 +450,46 @@ def Volunteer_Home():
 
 @app.route("/View_request_volunteer")
 def View_request_volunteer():
-    qry = "SELECT `user`.fname,lname,`request`.* FROM `request` JOIN `user` ON `request`.userid = `user`.lid JOIN `requestdetails` ON `request`.id=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s"
+    qry = "SELECT `user`.fname,lname,`request`.* FROM `request` JOIN `user` ON `request`.userid = `user`.lid JOIN `requestdetails` ON `request`.id=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s and `requestdetails`.status='pending'"
     res = selectall2(qry, session['lid'])
     return render_template("Volunteer/View Request.html", val=res)
 
+
+@app.route("/accept_request")
+def accept_request():
+    id = request.args.get('id')
+    qry = "UPDATE `requestdetails` SET `status`='Accepted' WHERE `id`=%s"
+    iud(qry, id)
+    return '''<script>alert("Successfully Accepted");window.location="View_request_volunteer"</script>'''
+
+
+@app.route("/reject_request")
+def reject_request():
+    id = request.args.get('id')
+    qry = "UPDATE `requestdetails` SET `status`='rejected' WHERE `id`=%s"
+    iud(qry, id)
+    return '''<script>alert("Successfully Accepted");window.location="View_request_volunteer"</script>'''
+
+
 @app.route("/Manage_request_volunteer")
 def Manage_request_volunteer():
-    return render_template("Volunteer/manage request status.html")
+    qry = "SELECT `user`.`fname`,`lname`,`request`.*,`requestdetails`.`status` FROM `request` JOIN `user` ON `request`.`userid`=`user`.`lid` JOIN `requestdetails` ON `request`.`id`=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s and requestdetails.status!='pending' and requestdetails.status!='rejected'"
+    res = selectall2(qry, session['lid'])
+    return render_template("Volunteer/manage request status.html", val=res)
 
 @app.route("/Manage_requestdetails_volunteer")
 def Manage_requestdetails_volunteer():
+    id = request.args.get('id')
+    session['reqid'] = id
     return render_template("Volunteer/manage rqst status 2.html")
+
+
+@app.route("/update_reqst", methods=['post'])
+def update_reqst():
+    status = request.form['textfield']
+    qry = "UPDATE `requestdetails` SET `status`=%s where id=%s"
+    iud(qry, (status, session['reqid']))
+    return '''<script>alert("Success");window.location="/Manage_request_volunteer"</script>'''
 
 
 @app.route("/Sendcomplaint_viewreply_volunteer")
