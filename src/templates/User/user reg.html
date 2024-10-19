@@ -11,20 +11,20 @@
     <tr>
       <td>First Name </td>
       <td><label>
-        <input type="text" name="textfield" />
+        <input type="text" name="textfield" required pattern="[A-Z a-z.]{3,25}" />
       </label></td>
     </tr>
     <tr>
       <td>Last Name </td>
-      <td><input type="text" name="textfield2" /></td>
+      <td><input type="text" name="textfield2" required pattern="[A-Z a-z.]{3,25}"/></td>
     </tr>
     <tr>
       <td>Phone</td>
-      <td><input type="text" name="textfield3" /></td>
+      <td><input type="text" name="textfield3" required pattern="[6789][0-9]{9}" /></td>
     </tr>
     <tr>
       <td>Email</td>
-      <td><input type="text" name="textfield4" /></td>
+      <td><input type="text" name="textfield4" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}" /></td>
     </tr>
     <tr>
       <td>Place</td>

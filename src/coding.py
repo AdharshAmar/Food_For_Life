@@ -380,56 +380,61 @@ def user_Registration():
 
 @app.route("/user_register_code",methods=['post'])
 def user_register_code():
-    fname=request.form["textfield"]
-    lname = request.form["textfield2"]
-    phone = request.form["textfield3"]
-    email = request.form["textfield4"]
-    place = request.form["textfield5"]
-    post = request.form["textfield6"]
-    pin = request.form["textfield7"]
-    username = request.form["textfield8"]
-    password = request.form["textfield9"]
+    try:
+        fname=request.form["textfield"]
+        lname = request.form["textfield2"]
+        phone = request.form["textfield3"]
+        email = request.form["textfield4"]
+        place = request.form["textfield5"]
+        post = request.form["textfield6"]
+        pin = request.form["textfield7"]
+        username = request.form["textfield8"]
+        password = request.form["textfield9"]
 
-    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'Pending')"
-    val= (username,password)
-    id= iud(qry, val)
+        qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'Pending')"
+        val= (username,password)
+        id= iud(qry, val)
 
-    session['puserid'] = id
+        session['puserid'] = id
 
-    qry="INSERT INTO `user` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
-    val= (id, fname, lname, phone, place, post, pin, email)
+        qry="INSERT INTO `user` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s)"
+        val= (id, fname, lname, phone, place, post, pin, email)
 
-    iud(qry, val)
+        iud(qry, val)
 
-    random_number = random.randint(1000, 9999)
+        random_number = random.randint(1000, 9999)
 
-    print(random_number)
+        print(random_number)
 
-    s = random_number
-    session['otp'] = random_number
+        s = random_number
+        session['otp'] = random_number
 
-    def mail(s, email):
-        try:
-            gmail = smtplib.SMTP('smtp.gmail.com', 587)
-            gmail.ehlo()
-            gmail.starttls()
-            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
-        except Exception as e:
-            print("Couldn't setup email!!" + str(e))
-        msg = MIMEText("Your OTP to verify Email: " + str(s)+ " Dont share your OTP")
-        print(msg)
-        msg['Subject'] = 'Verify your email'
-        msg['To'] = email
-        msg['From'] = 'regionalmails@gmail.com'
-        try:
-            gmail.send_message(msg)
-        except Exception as e:
-            print("COULDN'T SEND EMAIL", str(e))
-        return '''<script>alert("SEND"); window.location="/"</script>'''
+        def mail(s, email):
+            try:
+                gmail = smtplib.SMTP('smtp.gmail.com', 587)
+                gmail.ehlo()
+                gmail.starttls()
+                gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+            except Exception as e:
+                print("Couldn't setup email!!" + str(e))
+            msg = MIMEText("Your OTP to verify Email: " + str(s)+ " Dont share your OTP")
+            print(msg)
+            msg['Subject'] = 'Verify your email'
+            msg['To'] = email
+            msg['From'] = 'regionalmails@gmail.com'
+            try:
+                gmail.send_message(msg)
+            except Exception as e:
+                print("COULDN'T SEND EMAIL", str(e))
+            return '''<script>alert("SEND"); window.location="/"</script>'''
 
-    mail(s,email)
+        mail(s,email)
 
-    return render_template("User/otp.html")
+        return render_template("User/otp.html")
+
+    except Exception as e:
+        print(e)
+        return '''<script>alert("Email or phone already exist");window.location="/"</script>'''
 
 
 @app.route("/Verify_otp", methods=['post'])
@@ -585,28 +590,32 @@ def Volunteer_Registration():
 
 @app.route("/Volunteer_register_code",methods=['post'])
 def Volunteer_register_code():
-    fname=request.form["textfield"]
-    lname = request.form["textfield2"]
-    phone = request.form["textfield22"]
-    email = request.form["textfield23"]
-    place = request.form["textfield24"]
-    post = request.form["textfield25"]
-    pin = request.form["textfield26"]
-    location = request.form["textfield27"]
-    username = request.form["textfield28"]
-    password = request.form["textfield29"]
 
-    qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'pending')"
-    val= (username,password)
-    id= iud(qry, val)
+    try:
 
-    qry="INSERT INTO `volunteer` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
-    val= (id, fname, lname, phone,email, place, post, pin,location)
+        fname=request.form["textfield"]
+        lname = request.form["textfield2"]
+        phone = request.form["textfield22"]
+        email = request.form["textfield23"]
+        place = request.form["textfield24"]
+        post = request.form["textfield25"]
+        pin = request.form["textfield26"]
+        location = request.form["textfield27"]
+        username = request.form["textfield28"]
+        password = request.form["textfield29"]
 
-    iud(qry, val)
+        qry="INSERT INTO `login` VALUES(NULL, %s, %s, 'pending')"
+        val= (username,password)
+        id= iud(qry, val)
 
-    return '''<script>alert("Registration successfull");window.location="/"</script>'''
+        qry="INSERT INTO `volunteer` VALUES(NULL,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        val= (id, fname, lname, phone,email, place, post, pin,location)
 
+        iud(qry, val)
+
+        return '''<script>alert("Registration successfull");window.location="/"</script>'''
+    except:
+        return '''<script>alert("Email or phone already exist");window.location="/"</script>'''
 
 
 
