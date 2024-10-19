@@ -65,6 +65,36 @@ def accept_volunteer():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="Volunteer" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `volunteer` WHERE lid = %s"
+    res = selectone(qry, id)
+
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been successfully accepted by admin")
+        print(msg)
+        msg['Subject'] = 'hey there'
+        msg['To'] = email
+        msg['From'] = 'regionalmails@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
+
+
     return '''<script>alert("Successfully Accepted");window.location="/Verify_volunteers"</script>'''
 
 
@@ -73,6 +103,34 @@ def reject_volunteer():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="rejected" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `volunteer` WHERE lid = %s"
+    res = selectone(qry, id)
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been rejected by admin")
+        print(msg)
+        msg['Subject'] = 'Hey there'
+        msg['To'] = email
+        msg['From'] = 'regionalmails@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
+
     return '''<script>alert("Rejected");window.location="/Verify_volunteers"</script>'''
 
 
@@ -450,7 +508,7 @@ def Volunteer_Home():
 
 @app.route("/View_request_volunteer")
 def View_request_volunteer():
-    qry = "SELECT `user`.fname,lname,`request`.* FROM `request` JOIN `user` ON `request`.userid = `user`.lid JOIN `requestdetails` ON `request`.id=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s and `requestdetails`.status='pending'"
+    qry = "SELECT `user`.fname,lname,`request`.*,requestdetails.id as reqdid FROM `request` JOIN `user` ON `request`.userid = `user`.lid JOIN `requestdetails` ON `request`.id=`requestdetails`.`requestid` WHERE `requestdetails`.`volunteerid`=%s and `requestdetails`.status='pending'"
     res = selectall2(qry, session['lid'])
     return render_template("Volunteer/View Request.html", val=res)
 
@@ -458,8 +516,13 @@ def View_request_volunteer():
 @app.route("/accept_request")
 def accept_request():
     id = request.args.get('id')
+    reqid = request.args.get('reqid')
     qry = "UPDATE `requestdetails` SET `status`='Accepted' WHERE `id`=%s"
-    iud(qry, id)
+    iud(qry, reqid)
+
+    qry = "DELETE FROM `requestdetails` WHERE `requestid`=%s AND `volunteerid`!=%s"
+    iud(qry,(id, session['lid']))
+
     return '''<script>alert("Successfully Accepted");window.location="View_request_volunteer"</script>'''
 
 
@@ -468,7 +531,7 @@ def reject_request():
     id = request.args.get('id')
     qry = "UPDATE `requestdetails` SET `status`='rejected' WHERE `id`=%s"
     iud(qry, id)
-    return '''<script>alert("Successfully Accepted");window.location="View_request_volunteer"</script>'''
+    return '''<script>alert("Successfully Rejected ");window.location="View_request_volunteer"</script>'''
 
 
 @app.route("/Manage_request_volunteer")
