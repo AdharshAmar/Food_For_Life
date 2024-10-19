@@ -158,6 +158,33 @@ def block_user():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="blocked" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `user` WHERE lid = %s"
+    res = selectone(qry, id)
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been blocked by admin")
+        print(msg)
+        msg['Subject'] = 'Hey there'
+        msg['To'] = email
+        msg['From'] = 'foodforlifedonation@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
     return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
 
 
@@ -166,6 +193,33 @@ def unblock_user():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="User" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `user` WHERE lid = %s"
+    res = selectone(qry, id)
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been Unblocked by admin")
+        print(msg)
+        msg['Subject'] = 'Hey there'
+        msg['To'] = email
+        msg['From'] = 'foodforlifedonation@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
     return '''<script>alert("UnBlocked");window.location="/Block_Unblock"</script>'''
 
 
@@ -174,6 +228,33 @@ def block_volunteer():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="blocked" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `volunteer` WHERE lid = %s"
+    res = selectone(qry, id)
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been blocked by admin")
+        print(msg)
+        msg['Subject'] = 'Hey there'
+        msg['To'] = email
+        msg['From'] = 'foodforlifedonation@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
     return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
 
 
@@ -182,6 +263,33 @@ def unblock_volunteer():
     id = request.args.get('id')
     qry = 'UPDATE `login` SET `type`="Volunteer" WHERE `id`=%s'
     iud(qry, id)
+
+    qry = "SELECT * FROM `volunteer` WHERE lid = %s"
+    res = selectone(qry, id)
+
+    gmail = res['email']
+
+    def mail(email):
+        try:
+            gmail = smtplib.SMTP('smtp.gmail.com', 587)
+            gmail.ehlo()
+            gmail.starttls()
+            gmail.login('foodforlifedonation@gmail.com', 'jnjd eqxp ajlp dyoc')
+        except Exception as e:
+            print("Couldn't setup email!!" + str(e))
+        msg = MIMEText("You have been Unblocked by admin")
+        print(msg)
+        msg['Subject'] = 'Hey there'
+        msg['To'] = email
+        msg['From'] = 'foodforlifedonation@gmail.com'
+        try:
+            gmail.send_message(msg)
+        except Exception as e:
+            print("COULDN'T SEND EMAIL", str(e))
+        return '''<script>alert("SEND"); window.location="/"</script>'''
+
+    mail(gmail)
+
     return '''<script>alert("Blocked");window.location="/Block_Unblock"</script>'''
 
 
