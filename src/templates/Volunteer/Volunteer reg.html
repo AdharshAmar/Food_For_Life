@@ -11,42 +11,42 @@
     <tr>
       <td>First Name </td>
       <td><label>
-        <input type="text" name="textfield" />
+        <input type="text" name="textfield" required pattern="[A-Z a-z.]{3,25}" title="Only letters and periods allowed. Length: 3-25 characters."/>
       </label></td>
     </tr>
     <tr>
       <td>Last Name </td>
       <td><label>
-        <input type="text" name="textfield2" />
+        <input type="text" name="textfield2" required pattern="[A-Z a-z.]{3,25}" title="Only letters and periods allowed. Length: 3-25 characters." />
       </label></td>
     </tr>
     <tr>
       <td>Phone</td>
-      <td><input type="text" name="textfield22" /></td>
+      <td><input type="text" name="textfield22" required pattern="[6789][0-9]{9}" title="Phone number must start with 6, 7, 8, or 9 and be 10 digits long."/></td>
     </tr>
     <tr>
       <td>Email</td>
-      <td><input type="text" name="textfield23" /></td>
+      <td><input type="text" name="textfield23" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}" title="Enter a valid email address." /></td>
     </tr>
     <tr>
       <td>Place</td>
-      <td><input type="text" name="textfield24" /></td>
+      <td><input type="text" name="textfield24" required/></td>
     </tr>
     <tr>
       <td>Post</td>
-      <td><input type="text" name="textfield25" /></td>
+      <td><input type="text" name="textfield25" required/></td>
     </tr>
     <tr>
       <td>Pin</td>
-      <td><input type="text" name="textfield26" /></td>
+      <td><input type="text" name="textfield26" required pattern="[0-9]{6}" title="Pin code must be 6 digits."/></td>
     </tr>
     <tr>
       <td>Location</td>
-      <td><input type="text" name="textfield27" /></td>
+      <td><input type="text" name="textfield27" required/></td>
     </tr>
     <tr>
       <td>UserName</td>
-      <td><input type="text" name="textfield28" /></td>
+      <td><input type="text" name="textfield28" required pattern=".{4,15}" title="Username must be 4-15 characters long." /></td>
     </tr>
     <tr>
       <td>Password</td>
